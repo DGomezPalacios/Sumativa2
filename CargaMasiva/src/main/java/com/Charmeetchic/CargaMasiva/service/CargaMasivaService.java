@@ -2,9 +2,9 @@ package com.Charmeetchic.CargaMasiva.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,47 +17,53 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class CargaMasivaService {
-    private ProductoRepository productoRepository;
-    private CargaMasivaRepository cargaMasivaRepository;
+    private final CargaMasivaRepository cargaMasivaRepository;
 
-    //procesar archivo CSV y guardar productos en la base de datos
+ //lee el arcvhivo
     public int cargarProductosMasivamente(MultipartFile file) throws Exception {
-        List<Producto> productos = new ArrayList<>();
-
-        // leer archivo CSV linea x linea
+        int cantidad = 0;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            String linea;
             boolean primera = true;
+            String linea;
             while ((linea = br.readLine()) != null) {
-                //saltar encabezado con los nimbres
-                if (primera) {
+                if (primera) { 
                     primera = false;
                     continue;
                 }
-                //separar los campos por coma
-                String[] campos = linea.split(",");
-                //crear objeto Producto y asignar los campos
-                Producto producto = new Producto();
-                producto.setNombre(campos[0]);
-                producto.setDescripcion(campos[1]);
-                producto.setPrecio(Double.valueOf(campos[2]));
-                producto.setMaterial(campos[3]);
-                producto.setPeso(Double.valueOf(campos[4]));
-                producto.setMedidas(campos[5]);
-                producto.setCategoriaId(Long.valueOf(campos[6]));
-                productos.add(producto);
+                if (!linea.trim().isEmpty()) {
+                    cantidad++;
+                }
             }
         }
-        //guardar todos los productos de una vez
-        productoRepository.saveAll(productos);
-
-        // registrar el evento de carga masiva
         CargaMasiva evento = new CargaMasiva();
         evento.setFechaCarga(new Date());
-        evento.setCantidadProductos(productos.size());
+        evento.setCantidadProductos(cantidad);
         cargaMasivaRepository.save(evento);
+        return cantidad;
+    }
 
-        //retornar la cantidad de productos cargados
-        return productos.size();
+    // solo para fin de pruebas es la creacion manual
+    public CargaMasiva crearEvento(CargaMasiva evento) {
+        return cargaMasivaRepository.save(evento);
+    }
+
+    public List<CargaMasiva> listarEventos() {
+        return cargaMasivaRepository.findAll();
+    }
+
+    public Optional<CargaMasiva> buscarEventoPorId(Long id) {
+        return cargaMasivaRepository.findById(id);
+    }
+
+    public CargaMasiva actualizarEvento(Long id, CargaMasiva actualizado) {
+        CargaMasiva evento = cargaMasivaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+        evento.setFechaCarga(actualizado.getFechaCarga());
+        evento.setCantidadProductos(actualizado.getCantidadProductos());
+        return cargaMasivaRepository.save(evento);
+    }
+
+    public void eliminarEvento(Long id) {
+        cargaMasivaRepository.deleteById(id);
     }
 }
