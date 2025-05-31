@@ -27,8 +27,7 @@ public class NotificacionesController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Notificaciones> actualizarNotificacion(@PathVariable Long id, @RequestBody Notificaciones notificacion) {
-        notificacion.setId(id);
-        return ResponseEntity.ok(notificacionesService.guardar(notificacion));
+        return ResponseEntity.ok(notificacionesService.actualizar(id, notificacion));
     }
 
     @DeleteMapping("/{id}")
