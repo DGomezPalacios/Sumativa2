@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-        @GetMapping
+    @GetMapping
     public List<Usuario> getAllUsuarios() {
         return usuarioService.getAllUsuarios();
     }
@@ -37,7 +38,7 @@ public class UsuarioController {
                       .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/registrar")
+    @PostMapping
     public ResponseEntity<Usuario> registrar(@RequestBody Usuario usuario){
         return ResponseEntity.ok(usuarioService.registrar(usuario)); //llama al servicio)
     }
@@ -52,9 +53,16 @@ public class UsuarioController {
         : ResponseEntity.status(401).body("Credenciales incomrrectas");
     }
 
-    @PutMapping ("/actualizar")
+    @PutMapping ("/{id}")
     public ResponseEntity<Usuario> actualizar(@RequestBody Usuario usuario){
         return ResponseEntity.ok(usuarioService.actualizarPerfil(usuario));
     }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id){
+        usuarioService.eliminarUsuario(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
