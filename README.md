@@ -43,7 +43,7 @@ Cada microservicio incluye:
 
 ## Instalación y Ejecución
 
-1. Clona el repositorio:
+1. Clona el repositorio
 2. Configura la base de datos en el archivo `application.properties` de cada microservicio.
 3. Ejecuta en cada carpeta de microservicio:
    mvn clean install
@@ -52,15 +52,18 @@ Cada microservicio incluye:
 
 ## Pruebas y Colección Postman
 
--Prueba todos los endpoints usando Postman.
+Puedes probar todos los endpoints usando la colección oficial de Postman:
 
-Colección de endpoints disponible aquí:
-Colección Postman - CharmeetChic
+- **[Colección Postman - CharmeetChic](https://api.postman.com/collections/44443461-f9789895-405c-4ae2-b8a6-924e7c1f36cd?access_key=PMAT-01JWM94M9JA3DG05Z8G88AFSAW)**
 
--Para usar la colección:
-1.- Abre Postman.
-2.-Haz clic en "Import" > "Link".
-3.-Pega el enlace y confirma.
+**¿Cómo usarla?**
+1. Copia el enlace.
+2. Abre Postman y haz clic en **"Import"**.
+3. Selecciona **"Link"** y pega la URL.
+4. Haz clic en **"Continue"** y luego **"Import"**.
+5. La colección quedará lista y organizada por microservicio para tus pruebas.
+
+> La colección contiene ejemplos y descripciones para facilitar el testing de la API.
 
 Todos los endpoints quedarán organizados por microservicio.
 
