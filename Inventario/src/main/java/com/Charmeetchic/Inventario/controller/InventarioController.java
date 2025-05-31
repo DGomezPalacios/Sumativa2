@@ -27,8 +27,7 @@ public class InventarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Inventario> actualizarInventario(@PathVariable Long id, @RequestBody Inventario inventario) {
-        inventario.setId(id);
-        return ResponseEntity.ok(inventarioService.guardar(inventario));
+        return ResponseEntity.ok(inventarioService.actualizar(id, inventario));
     }
 
     @DeleteMapping("/{id}")

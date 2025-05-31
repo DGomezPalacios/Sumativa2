@@ -26,9 +26,19 @@ public class InventarioService {
     public void eliminar(Long id) {
         inventarioRepository.deleteById(id);
     }
-    
-    // Buscar producto en inventario
+
     public Optional<Inventario> buscarPorProductoId(Long productoId) {
         return inventarioRepository.findByProductoId(productoId);
+    }
+
+    public Inventario actualizar(Long id, Inventario inventario) {
+        Optional<Inventario> inventarioExistente = inventarioRepository.findById(id);
+        if (inventarioExistente.isPresent()) {
+            inventario.setId(id); 
+            inventario.verificarAlerta();
+            return inventarioRepository.save(inventario);
+        } else {
+            throw new RuntimeException("Inventario con ID " + id + " no encontrado");
+        }
     }
 }
