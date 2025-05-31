@@ -18,7 +18,7 @@ import com.Charmeetchic.Pago.service.PagoService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/pago")
 @AllArgsConstructor
 public class PagoController {
     private PagoService pagoService;
