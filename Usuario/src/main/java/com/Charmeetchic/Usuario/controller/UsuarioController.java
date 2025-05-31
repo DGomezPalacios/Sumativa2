@@ -30,7 +30,6 @@ public class UsuarioController {
         return usuarioService.getAllUsuarios();
     }
 
-    // GET: Busca usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> getUsuarioById(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.getUsuarioById(id);
@@ -53,9 +52,9 @@ public class UsuarioController {
         : ResponseEntity.status(401).body("Credenciales incomrrectas");
     }
 
-    @PutMapping ("/{id}")
-    public ResponseEntity<Usuario> actualizar(@RequestBody Usuario usuario){
-        return ResponseEntity.ok(usuarioService.actualizarPerfil(usuario));
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario usuario){
+        return ResponseEntity.ok(usuarioService.actualizarPerfil(id, usuario));
     }
     
     @DeleteMapping("/{id}")
