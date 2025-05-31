@@ -1,39 +1,36 @@
 package com.Charmeetchic.Compras.controller;
 
-import com.Charmeetchic.Compras.service.ComprasService;
 import com.Charmeetchic.Compras.model.Compras;
+import com.Charmeetchic.Compras.service.ComprasService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/compras")
+@RequestMapping("/compras")
 @AllArgsConstructor
 public class ComprasController {
 
     private final ComprasService comprasService;
 
     @GetMapping
-    public ResponseEntity<List<Compras>> listarCompras() {
-        return ResponseEntity.ok(comprasService.obtenerTodas());
+    public List<Compras> obtenerTodas() {
+        return comprasService.obtenerTodas();
     }
 
     @PostMapping
-    public ResponseEntity<Compras> crearCompra(@RequestBody Compras compras) {
-        return ResponseEntity.ok(comprasService.guardar(compras));
+    public Compras guardar(@RequestBody Compras compra) {
+        return comprasService.guardar(compra);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Compras> actualizarCompra(@PathVariable Long id, @RequestBody Compras compras) {
-        compras.setId(id);
-        return ResponseEntity.ok(comprasService.guardar(compras));
+    public Compras actualizar(@PathVariable Long id, @RequestBody Compras compraActualizada) {
+        return comprasService.actualizar(id, compraActualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCompra(@PathVariable Long id) {
+    public void eliminar(@PathVariable Long id) {
         comprasService.eliminar(id);
-        return ResponseEntity.noContent().build();
     }
 }
