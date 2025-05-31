@@ -22,9 +22,20 @@ public class ProductoService {
     }
 
     //editar un producto 
-    public Producto modificarProducto(Producto producto) {
-        return productoRepository.save(producto);
-    }
+    public Producto modificarProducto(Long id, Producto productoActualizado) {
+           Producto producto = productoRepository.findById(id)
+               .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        
+           producto.setNombre(productoActualizado.getNombre());
+           producto.setDescripcion(productoActualizado.getDescripcion());
+           producto.setPrecio(productoActualizado.getPrecio());
+           producto.setMaterial(productoActualizado.getMaterial());
+           producto.setPeso(productoActualizado.getPeso());
+           producto.setMedidas(productoActualizado.getMedidas());
+           producto.setCategoriaId(productoActualizado.getCategoriaId());
+           return productoRepository.save(producto);
+        }
+
 
     //eliminar un producto por su id
     public void eliminarProducto(Long id) {

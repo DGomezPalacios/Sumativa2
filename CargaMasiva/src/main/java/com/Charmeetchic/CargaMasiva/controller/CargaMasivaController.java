@@ -1,12 +1,13 @@
 package com.Charmeetchic.CargaMasiva.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Charmeetchic.CargaMasiva.model.CargaMasiva;
 import com.Charmeetchic.CargaMasiva.service.CargaMasivaService;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ public class CargaMasivaController {
 
     private final CargaMasivaService cargaMasivaService;
 
-    // cargar arichovs masivamente
+    // para registrar cuando se cargue un archivo
     @PostMapping("/productos")
     public ResponseEntity<String> cargarProductos(@RequestParam("file") MultipartFile file) {
         try {
@@ -27,5 +28,33 @@ public class CargaMasivaController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al procesar el archivo: " + e.getMessage());
         }
+    }
+
+    @PostMapping
+    public ResponseEntity<CargaMasiva> crearEvento(@RequestBody CargaMasiva evento) {
+        return ResponseEntity.ok(cargaMasivaService.crearEvento(evento));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CargaMasiva>> listarEventos() {
+        return ResponseEntity.ok(cargaMasivaService.listarEventos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CargaMasiva> buscarEventoPorId(@PathVariable Long id) {
+        Optional<CargaMasiva> evento = cargaMasivaService.buscarEventoPorId(id);
+        return evento.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CargaMasiva> actualizarEvento(@PathVariable Long id, @RequestBody CargaMasiva actualizado) {
+        return ResponseEntity.ok(cargaMasivaService.actualizarEvento(id, actualizado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarEvento(@PathVariable Long id) {
+        cargaMasivaService.eliminarEvento(id);
+        return ResponseEntity.noContent().build();
     }
 }

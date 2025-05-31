@@ -29,14 +29,29 @@ public class UsuarioService {
         return Optional.empty(); //credenciales incorectas
     }
 
-    public Usuario actualizarPerfil(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public Usuario actualizarPerfil(Long id, Usuario usuarioActualizado) {
+        Usuario usuarioExistente = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuarioExistente.setNombre(usuarioActualizado.getNombre());
+        usuarioExistente.setApellido(usuarioActualizado.getApellido());
+        usuarioExistente.setCorreo(usuarioActualizado.getCorreo());
+        usuarioExistente.setContrasenia(usuarioActualizado.getContrasenia());
+        usuarioExistente.setRol(usuarioActualizado.getRol());
+
+        return usuarioRepository.save(usuarioExistente);
     }
+    
     public List<Usuario> getAllUsuarios() {
     return usuarioRepository.findAll();
     }
+    
     public Optional<Usuario> getUsuarioById(Long id) {
         return usuarioRepository.findById(id);
+    }
+    
+    public void eliminarUsuario(Long id) {
+        usuarioRepository.deleteById(id);
     }
 
     

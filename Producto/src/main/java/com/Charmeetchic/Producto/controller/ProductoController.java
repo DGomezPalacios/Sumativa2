@@ -31,9 +31,9 @@ public class ProductoController {
     }
 
     //act producto
-    @PutMapping
-    public ResponseEntity<Producto> modificarProducto(@RequestBody Producto producto) {
-        return ResponseEntity.ok(productoService.modificarProducto(producto));
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> modificarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        return ResponseEntity.ok(productoService.modificarProducto(id, producto));
     }
 
     //eliminar prod
