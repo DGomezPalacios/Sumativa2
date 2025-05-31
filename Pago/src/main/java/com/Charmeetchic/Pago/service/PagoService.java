@@ -16,27 +16,37 @@ import lombok.AllArgsConstructor;
 public class PagoService {
      private PagoRepository pagoRepository;
 
-    //nuevo pago (Aprobado)
     public Pago procesarPago(Pago pago) {
         pago.setEstado("APROBADO"); // se podria validar con integracion
         pago.setFechaPago(new Date());
         return pagoRepository.save(pago);
     }
 
-    //buscar pagos por pedido
     public List<Pago> buscarPorPedido(Long pedidoId) {
         return pagoRepository.findByPedidoId(pedidoId);
     }
 
-    //buscar pago por ID
     public Optional<Pago> buscarPorId(Long id) {
         return pagoRepository.findById(id);
     }
 
-    //listar todos los pagos
+
     public List<Pago> listarTodos() {
         return pagoRepository.findAll();
     }
 
+    public Pago actualizarPago(Long id, Pago pagoActualizado) {
+        Pago pago = pagoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+
+        pago.setMonto(pagoActualizado.getMonto());
+        pago.setMetodoPago(pagoActualizado.getMetodoPago());
+        pago.setEstado(pagoActualizado.getEstado());
+        return pagoRepository.save(pago);
+    }
+
+    public void eliminarPago(Long id) {
+        pagoRepository.deleteById(id);
+    }
 
 }
