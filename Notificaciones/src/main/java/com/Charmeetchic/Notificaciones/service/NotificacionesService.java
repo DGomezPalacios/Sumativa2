@@ -24,4 +24,16 @@ public class NotificacionesService {
     public void eliminar(Long id) {
         notificacionesRepository.deleteById(id);
     }
+
+    public Notificaciones actualizar(Long id, Notificaciones nuevaNotificacion) {
+        Notificaciones existente = notificacionesRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Notificación no encontrada con ID: " + id));
+
+        existente.setDestinatario(nuevaNotificacion.getDestinatario());
+        existente.setMensaje(nuevaNotificacion.getMensaje());
+        existente.setTipo(nuevaNotificacion.getTipo());
+        existente.setEnviado(nuevaNotificacion.isEnviado());
+
+        return notificacionesRepository.save(existente);
+    }
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -18,9 +19,20 @@ public class ReporteService {
         return reporteRepository.findAll();
     }
 
-    // Guardar o actualizar un reporte
+    // Guardar un nuevo reporte
     public Reporte guardar(Reporte reporte) {
         return reporteRepository.save(reporte);
+    }
+
+    // Actualizar un reporte existente
+    public Reporte actualizar(Long id, Reporte reporteActualizado) {
+        Optional<Reporte> reporteExistente = reporteRepository.findById(id);
+        if (reporteExistente.isPresent()) {
+            reporteActualizado.setId(id);
+            return reporteRepository.save(reporteActualizado);
+        } else {
+            throw new RuntimeException("Reporte no encontrado con ID: " + id);
+        }
     }
 
     // Eliminar un reporte por ID
@@ -28,4 +40,3 @@ public class ReporteService {
         reporteRepository.deleteById(id);
     }
 }
-

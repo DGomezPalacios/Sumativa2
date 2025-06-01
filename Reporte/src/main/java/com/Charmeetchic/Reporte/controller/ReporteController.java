@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reportes")
+@RequestMapping("/api/reporte")
 @AllArgsConstructor
 public class ReporteController {
 
@@ -27,8 +27,7 @@ public class ReporteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Reporte> actualizarReporte(@PathVariable Long id, @RequestBody Reporte reporte) {
-        reporte.setId(id);
-        return ResponseEntity.ok(reporteService.guardar(reporte));
+        return ResponseEntity.ok(reporteService.actualizar(id, reporte));
     }
 
     @DeleteMapping("/{id}")
@@ -37,4 +36,3 @@ public class ReporteController {
         return ResponseEntity.noContent().build();
     }
 }
-

@@ -15,6 +15,9 @@ public class Inventario {
     private int stockMinimo; // stock minimo para generar alerta
     private boolean alerta; // alerta en caso de bajar stock
     
+    @Version
+    private Integer version;
+    
     public void verificarAlerta() {
         this.alerta = stock <= stockMinimo;
     }
