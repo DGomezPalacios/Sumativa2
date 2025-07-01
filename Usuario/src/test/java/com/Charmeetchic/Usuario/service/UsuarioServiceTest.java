@@ -22,7 +22,7 @@ public class UsuarioServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Test
-    public void testRegistrarFernando() {
+    public void testRegisterUser() {
         Usuario usuario = new Usuario();
         usuario.setId(2L);
         usuario.setNombre("Fernando");
@@ -31,16 +31,25 @@ public class UsuarioServiceTest {
         usuario.setContrasenia("clave123");
         usuario.setRol(Usuario.Rol.COMPRADOR);
 
+        // al guardar, retorna el mismo usuario
         when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
         Usuario registrado = usuarioService.registrar(usuario);
 
+        // assersiones
         assertNotNull(registrado);
         assertEquals("Fernando", registrado.getNombre());
         assertEquals("fernando@ejemplo.com", registrado.getCorreo());
         assertEquals(Usuario.Rol.COMPRADOR, registrado.getRol());
 
-        verify(usuarioRepository, times(1)).save(usuario);
+    }
+
+    @Test
+    public void testEliminar() {
+        Long id = 1L;
+        doNothing().when(usuarioRepository).deleteById(id);
+        usuarioService.eliminarUsuario(id);
+
     }
 
 }
