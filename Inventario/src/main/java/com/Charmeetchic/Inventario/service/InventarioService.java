@@ -41,4 +41,7 @@ public class InventarioService {
             throw new RuntimeException("Inventario con ID " + id + " no encontrado");
         }
     }
+    public Optional<Inventario> obtenerPorId(Long id) {
+    return inventarioRepository.findById(id);
+}
 }
