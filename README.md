@@ -25,7 +25,7 @@ Cada microservicio aborda una funcionalidad clave del sistema y opera de manera 
 Cada microservicio incluye:
 - Archivo `pom.xml` propio.
 - Capas: **controller**, **service**, **repository**, **model**.
--  Configuración para conectarse a una base de datos común en Oracle.
+- Configuración de base de datos independiente.
 - Endpoints RESTful (CRUD y operaciones específicas).
 
 ---
