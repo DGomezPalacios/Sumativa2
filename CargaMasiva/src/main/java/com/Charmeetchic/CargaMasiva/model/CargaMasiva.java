@@ -11,16 +11,6 @@ import lombok.Data;
 @Entity
 @Data
 public class CargaMasiva {
-<<<<<<< HEAD
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Date fechaCarga;
-    private Integer cantidadProductos;
-
-}
-=======
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,4 +33,3 @@ public class CargaMasiva {
         // Aquí iría la lógica correspondiente
     }
 }
->>>>>>> main
