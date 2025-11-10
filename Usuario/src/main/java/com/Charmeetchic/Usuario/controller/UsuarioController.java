@@ -16,64 +16,73 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/usuario")
-@Tag(name = "Usuarios", description = "sin HATEOAS")
+@RequestMapping("/api/usuario")
+@Tag(name = "Usuarios", description = "CRUD de usuarios sin HATEOAS")
+@CrossOrigin(origins = { "http://localhost:3000", "https://charmeet-chic.vercel.app" })
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
+    // LISTAR todos los usuarios
     @GetMapping
-    @Operation(summary = "Listar todos los usuarios", description = "Devuelve todos los campos de todos los usuarios, incluyendo la contraseña.")
+    @Operation(summary = "Listar todos los usuarios")
     @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente")
-    public List<Usuario> getAllUsuarios() {
-        return usuarioService.getAllUsuarios();
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
+        List<Usuario> usuarios = usuarioService.getAllUsuarios();
+        return ResponseEntity.ok(usuarios);
     }
 
+    // OBTENER usuario por ID
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener usuario por ID", description = "Devuelve un usuario específico con todos sus datos.")
+    @Operation(summary = "Obtener usuario por ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
-            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+        @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-    public ResponseEntity<Usuario> getUsuarioById(@PathVariable Long id) {
+    public ResponseEntity<Usuario> obtenerPorId(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.getUsuarioById(id);
-        return usuario.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return usuario.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    // CREAR nuevo usuario (compatible con tu React)
     @PostMapping
-    @Operation(summary = "Registrar nuevo usuario", description = "Crea un nuevo usuario con todos los campos requeridos.")
+    @Operation(summary = "Registrar nuevo usuario")
     @ApiResponse(responseCode = "200", description = "Usuario registrado exitosamente")
-    public ResponseEntity<Usuario> registrar(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.registrar(usuario));
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
+        Usuario nuevo = usuarioService.registrar(usuario);
+        return ResponseEntity.ok(nuevo);
     }
 
+    // ACTUALIZAR usuario existente
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar usuario")
+    @ApiResponse(responseCode = "200", description = "Usuario actualizado correctamente")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        Usuario actualizado = usuarioService.actualizarPerfil(id, usuario);
+        return ResponseEntity.ok(actualizado);
+    }
+
+    // ELIMINAR usuario
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar usuario")
+    @ApiResponse(responseCode = "204", description = "Usuario eliminado con éxito")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
+        usuarioService.eliminarUsuario(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // LOGIN 
     @PostMapping("/login")
-    @Operation(summary = "Iniciar sesión", description = "Valida correo y contraseña para autenticar al usuario.")
+    @Operation(summary = "Iniciar sesión")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso"),
-            @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
+        @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso"),
+        @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
     })
     public ResponseEntity<?> login(@RequestBody Usuario usuario) {
         Optional<Usuario> autenticado = usuarioService.login(usuario.getCorreo(), usuario.getContrasenia());
         return autenticado.isPresent()
                 ? ResponseEntity.ok(autenticado.get())
                 : ResponseEntity.status(401).body("Credenciales incorrectas");
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Actualizar usuario", description = "Actualiza todos los campos de un usuario existente.")
-    @ApiResponse(responseCode = "200", description = "Usuario actualizado correctamente")
-    public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.actualizarPerfil(id, usuario));
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar usuario", description = "Elimina un usuario por su ID.")
-    @ApiResponse(responseCode = "204", description = "Usuario eliminado con éxito")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build();
     }
 }

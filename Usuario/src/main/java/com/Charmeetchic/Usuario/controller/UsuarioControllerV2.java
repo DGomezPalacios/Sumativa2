@@ -28,7 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping("/api/usuario")
+@RequestMapping("/api/usuariov2")
 @Tag(name = "Usuarios-V2", description = "Operaciones relacionadas con gestión de usuarios(HATEOAS)")
 public class UsuarioControllerV2 {
 
