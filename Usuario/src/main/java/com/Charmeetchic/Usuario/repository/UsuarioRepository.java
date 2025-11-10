@@ -9,5 +9,5 @@ import com.Charmeetchic.Usuario.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByCorreo(String correo);
-
+    
 }
