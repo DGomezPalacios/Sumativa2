@@ -11,16 +11,16 @@ Cada microservicio aborda una funcionalidad clave del sistema y opera de manera 
 
 ## Estructura del Proyecto
 
-- **CargaMasiva:** Procesamiento y registro de eventos de carga masiva de productos.Actualmente opera de forma independiente (sin integración directa con Producto); se implementó un CRUD completo y carga manual para pruebas. Puede extenderse fácilmente para comunicarse con otros microservicios vía API REST en futuras versiones.
-- **Categoria:** Gestión y organización de categorías de productos.
-- **Compras:** Administración de órdenes de compra y sus detalles.
-- **Envios:** Gestión de despachos y seguimiento de envíos.
-- **Inventario:** Control y actualización de stock de productos.
-- **Notificaciones:** Envío y registro de notificaciones a los usuarios.
-- **Pago:** Registro y validación de transacciones de pago.
-- **Producto:** Administración y consulta de productos del catálogo.
-- **Reporte:** Generación de reportes sobre distintas áreas del sistema.
-- **Usuario:** Gestión de perfiles, autenticación y roles de usuario.
+- **CargaMasiva:** Procesamiento y registro de eventos de carga masiva de productos.Actualmente opera de forma independiente (sin integración directa con Producto); se implementó un CRUD completo y carga manual para pruebas. Puede extenderse fácilmente para comunicarse con otros microservicios vía API REST en futuras versiones. Puerto : 8081
+- **Categoria:** Gestión y organización de categorías de productos. Puerto : 8082
+- **Compras:** Administración de órdenes de compra y sus detalles. Puerto : 8083
+- **Envios:** Gestión de despachos y seguimiento de envíos. Puerto : 8084
+- **Inventario:** Control y actualización de stock de productos. Puerto : 8085
+- **Notificaciones:** Envío y registro de notificaciones a los usuarios. Puerto : 8086
+- **Pago:** Registro y validación de transacciones de pago. Puerto : 8087
+- **Producto:** Administración y consulta de productos del catálogo. Puerto : 8088
+- **Reporte:** Generación de reportes sobre distintas áreas del sistema. Puerto : 8089
+- **Usuario:** Gestión de perfiles, autenticación y roles de usuario. Puerto : 8080
 
 Cada microservicio incluye:
 - Archivo `pom.xml` propio.
