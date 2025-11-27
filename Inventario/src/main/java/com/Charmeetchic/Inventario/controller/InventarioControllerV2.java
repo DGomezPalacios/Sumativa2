@@ -1,4 +1,4 @@
-package com.Charmeetchic.Inventario.controller;
+/* package com.Charmeetchic.Inventario.controller;
 
 import com.Charmeetchic.Inventario.assembler.InventarioModelAssembler;
 import com.Charmeetchic.Inventario.model.Inventario;
@@ -77,3 +77,4 @@ public class InventarioControllerV2 {
         return ResponseEntity.noContent().build();
     }
 }
+ */

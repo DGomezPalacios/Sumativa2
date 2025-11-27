@@ -1,4 +1,4 @@
-package com.Charmeetchic.Inventario.assembler;
+/* package com.Charmeetchic.Inventario.assembler;
 
 import com.Charmeetchic.Inventario.controller.InventarioControllerV2;
 import com.Charmeetchic.Inventario.model.Inventario;
@@ -18,3 +18,4 @@ public class InventarioModelAssembler implements RepresentationModelAssembler<In
                 linkTo(methodOn(InventarioControllerV2.class).listarInventario()).withRel("todos"));
     }
 }
+ */
