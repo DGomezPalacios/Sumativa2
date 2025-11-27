@@ -14,7 +14,7 @@ public class ProductoRequestDTO {
 
     @NotNull
     @Min(0)
-    private Integer precio;
+    private Double precio;
 
     @NotNull
     @Min(0)

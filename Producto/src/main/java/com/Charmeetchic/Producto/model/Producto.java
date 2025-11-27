@@ -19,7 +19,7 @@ public class Producto {
     private String descripcion;
 
 @Column(nullable = false)
-private Integer precio;
+private Double precio;
 
     @Column(nullable = false)
     private Integer stock; 
