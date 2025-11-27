@@ -1,6 +1,7 @@
 package com.Charmeetchic.Contacto.service;
 
 import com.Charmeetchic.Contacto.dto.ContactoRequest;
+import com.Charmeetchic.Contacto.dto.ContactoResponse;
 import com.Charmeetchic.Contacto.model.Contacto;
 import com.Charmeetchic.Contacto.repository.ContactoRepository;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ public class ContactoService {
 
     private final ContactoRepository contactoRepository;
 
-    public Contacto guardar(ContactoRequest req) {
+    public ContactoResponse guardar(ContactoRequest req) {
 
         Contacto c = new Contacto();
         c.setNombre(req.getName());
@@ -22,6 +23,12 @@ public class ContactoService {
         c.setTipoServicio(req.getServiceType());
         c.setImagenUrl(req.getImageUrl());
 
-        return contactoRepository.save(c);
+        Contacto saved = contactoRepository.save(c);
+
+        return new ContactoResponse(
+                saved.getId(),
+                "Contacto recibido correctamente",
+                "OK"
+        );
     }
 }
