@@ -36,7 +36,7 @@ public class DataLoader {
         // Producto 2
         Producto p2 = new Producto();
         p2.setNombre("Aros Perla Vintage");
-        p2.setDescripcion("Aros clásicos de perla natural montados en plata 925.");
+        p2.setDescripcion("Aros clásicos de pluma natural montados en plata 925.");
         p2.setPrecio(15990.0);
         p2.setStock(12);
         p2.setMaterial("Plata 925");
