@@ -28,4 +28,6 @@ public class ProductoRequestDTO {
 
     @NotNull
     private Long categoriaId;
+
+    private String imagenUrl;
 }
