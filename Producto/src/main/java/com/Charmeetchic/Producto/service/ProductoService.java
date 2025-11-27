@@ -1,61 +1,44 @@
 package com.Charmeetchic.Producto.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
+import com.Charmeetchic.Producto.dto.ProductoMapper;
+import com.Charmeetchic.Producto.dto.ProductoRequestDTO;
+import com.Charmeetchic.Producto.dto.ProductoResponseDTO;
 import com.Charmeetchic.Producto.model.Producto;
 import com.Charmeetchic.Producto.repository.ProductoRepository;
+import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-
 public class ProductoService {
-    private final ProductoRepository productoRepository;
 
-    //crear un nuevo producto
-    public Producto crearProducto(Producto producto) {
-        return productoRepository.save(producto);
+    private final ProductoRepository repository;
+
+    public ProductoService(ProductoRepository repository) {
+        this.repository = repository;
     }
 
-    //editar un producto 
-    public Producto modificarProducto(Long id, Producto productoActualizado) {
-           Producto producto = productoRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        
-           producto.setNombre(productoActualizado.getNombre());
-           producto.setDescripcion(productoActualizado.getDescripcion());
-           producto.setPrecio(productoActualizado.getPrecio());
-           producto.setMaterial(productoActualizado.getMaterial());
-           producto.setPeso(productoActualizado.getPeso());
-           producto.setMedidas(productoActualizado.getMedidas());
-           producto.setCategoriaId(productoActualizado.getCategoriaId());
-           return productoRepository.save(producto);
-        }
-
-
-    //eliminar un producto por su id
-    public void eliminarProducto(Long id) {
-        productoRepository.deleteById(id);
+    public ProductoResponseDTO crearProducto(ProductoRequestDTO dto) {
+        Producto entity = ProductoMapper.toEntity(dto);
+        Producto guardado = repository.save(entity);
+        return ProductoMapper.toDTO(guardado);
     }
 
-    //buscar productos por nombre
-    public List<Producto> buscarPorNombre(String nombre) {
-        return productoRepository.findByNombreContainingIgnoreCase(nombre);
+    public List<ProductoResponseDTO> obtenerTodos() {
+        return repository.findAll()
+                .stream()
+                .map(ProductoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    //buscar un producto por ID
-    public Optional<Producto> buscarPorId(Long id) {
-        return productoRepository.findById(id);
+    public ProductoResponseDTO obtenerPorId(Long id) {
+        Producto p = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        return ProductoMapper.toDTO(p);
     }
 
-    //listar productos
-    public List<Producto> listarTodos() {
-        return productoRepository.findAll();
+    public void eliminar(Long id) {
+        repository.deleteById(id);
     }
-
-
 }
