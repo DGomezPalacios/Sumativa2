@@ -1,4 +1,4 @@
-package com.Charmeetchic.Usuario.assemblers;
+/* package com.Charmeetchic.Usuario.assemblers;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -19,4 +19,4 @@ public class UsuarioModelAssembler implements RepresentationModelAssembler<Usuar
             linkTo(methodOn(UsuarioController.class).obtenerPorId(usuario.getId())).withSelfRel(),
             linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"));
     }
-}
+} */

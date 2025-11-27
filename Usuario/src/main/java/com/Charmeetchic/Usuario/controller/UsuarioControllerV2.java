@@ -1,4 +1,4 @@
-package com.Charmeetchic.Usuario.controller;
+/* package com.Charmeetchic.Usuario.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,4 +97,4 @@ public class UsuarioControllerV2 {
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
     }
-}
+} */
