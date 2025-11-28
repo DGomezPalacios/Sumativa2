@@ -1,29 +1,27 @@
 package com.Charmeetchic.Compras.controller;
 
+import com.Charmeetchic.Compras.dto.CarritoResponse;
 import com.Charmeetchic.Compras.model.Compras;
-import com.Charmeetchic.Compras.model.CompraDetalle;
 import com.Charmeetchic.Compras.service.ComprasService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/compras")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ComprasController {
 
     private final ComprasService comprasService;
 
-    // Endpoints
-    // Obtener carrito completo del usuario
-    @GetMapping("/carrito/{usuarioId}")
-    public List<CompraDetalle> obtenerCarrito(@PathVariable Long usuarioId) {
-        Compras carrito = comprasService.obtenerOCrearCarrito(usuarioId);
-        return comprasService.obtenerDetalles(carrito.getId());
+    // Obtener carrito completo con productos
+    @GetMapping("/carrito-completo/{usuarioId}")
+    public CarritoResponse obtenerCarritoCompleto(@PathVariable Long usuarioId) {
+        return comprasService.obtenerCarritoCompleto(usuarioId);
     }
 
-    // Agregar producto al carrito
+    // Agregar producto
     @PostMapping("/carrito/agregar")
     public void agregarProducto(
             @RequestParam Long usuarioId,
@@ -32,46 +30,37 @@ public class ComprasController {
         comprasService.agregarProducto(usuarioId, productoId);
     }
 
-    // Eliminar producto del carrito
-    @DeleteMapping("/carrito/{usuarioId}/producto/{productoId}")
-    public void eliminarProducto(
+    // Actualizar cantidad
+    @PutMapping("/carrito/{usuarioId}/producto/{productoId}")
+    public void actualizar(
             @PathVariable Long usuarioId,
-            @PathVariable Long productoId
+            @PathVariable Long productoId,
+            @RequestParam Integer cantidad
     ) {
+        comprasService.actualizarProducto(usuarioId, productoId, cantidad);
+    }
+
+    // Eliminar producto
+    @DeleteMapping("/carrito/{usuarioId}/producto/{productoId}")
+    public void eliminar(@PathVariable Long usuarioId, @PathVariable Long productoId) {
         comprasService.eliminarProducto(usuarioId, productoId);
     }
 
     // Vaciar carrito
     @DeleteMapping("/carrito/{usuarioId}")
-    public void vaciarCarrito(@PathVariable Long usuarioId) {
+    public void vaciar(@PathVariable Long usuarioId) {
         comprasService.vaciarCarrito(usuarioId);
     }
 
     // Confirmar compra
     @PostMapping("/carrito/{usuarioId}/confirmar")
-    public void confirmarCompra(@PathVariable Long usuarioId) {
+    public void confirmar(@PathVariable Long usuarioId) {
         comprasService.confirmarCompra(usuarioId);
     }
 
-
-    // CRUDgit
+    // CRUD base
     @GetMapping
     public List<Compras> obtenerTodas() {
         return comprasService.obtenerTodas();
-    }
-
-    @PostMapping
-    public Compras guardar(@RequestBody Compras compra) {
-        return comprasService.guardar(compra);
-    }
-
-    @PutMapping("/{id}")
-    public Compras actualizar(@PathVariable Long id, @RequestBody Compras compraActualizada) {
-        return comprasService.actualizar(id, compraActualizada);
-    }
-
-    @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
-        comprasService.eliminar(id);
     }
 }
