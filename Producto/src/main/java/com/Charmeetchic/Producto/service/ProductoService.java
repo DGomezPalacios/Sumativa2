@@ -41,4 +41,14 @@ public class ProductoService {
     public void eliminar(Long id) {
         repository.deleteById(id);
     }
+public ProductoResponseDTO actualizarProducto(Long id, ProductoRequestDTO dto) {
+    var producto = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+    ProductoMapper.updateEntityFromDto(dto, producto);
+
+    return ProductoMapper.toDTO(repository.save(producto));
+}
+
+
 }

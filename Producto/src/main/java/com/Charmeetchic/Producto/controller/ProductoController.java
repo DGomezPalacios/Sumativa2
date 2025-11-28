@@ -37,4 +37,12 @@ public class ProductoController {
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
     }
+    @PutMapping("/{id}")
+public ProductoResponseDTO actualizar(
+        @PathVariable Long id,
+        @Valid @RequestBody ProductoRequestDTO dto
+) {
+    return service.actualizarProducto(id, dto);
+}
+
 }
