@@ -2,6 +2,7 @@ package com.Charmeetchic.Usuario.controller;
 
 import com.Charmeetchic.Usuario.jwt.JwtUtil;
 import com.Charmeetchic.Usuario.model.AuthResponse;
+import com.Charmeetchic.Usuario.model.LoginRequest;
 import com.Charmeetchic.Usuario.model.Usuario;
 import com.Charmeetchic.Usuario.service.UsuarioService;
 
@@ -31,73 +32,58 @@ public class UsuarioController {
     private JwtUtil jwtUtil;
 
     // ===========================
-    // LISTAR todos los usuarios
+    // LISTAR
     // ===========================
     @GetMapping
-    @Operation(summary = "Listar todos los usuarios")
-    @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
-        List<Usuario> usuarios = usuarioService.getAllUsuarios();
-        return ResponseEntity.ok(usuarios);
+        return ResponseEntity.ok(usuarioService.getAllUsuarios());
     }
 
     // ===========================
-    // OBTENER usuario por ID
+    // OBTENER POR ID
     // ===========================
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener usuario por ID")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
-    })
     public ResponseEntity<Usuario> obtenerPorId(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.getUsuarioById(id);
         return usuario.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     // ===========================
-    // CREAR nuevo usuario
+    // CREAR
     // ===========================
     @PostMapping
-    @Operation(summary = "Registrar nuevo usuario")
-    @ApiResponse(responseCode = "200", description = "Usuario registrado exitosamente")
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
         Usuario nuevo = usuarioService.registrar(usuario);
         return ResponseEntity.ok(nuevo);
     }
 
     // ===========================
-    // ACTUALIZAR usuario
+    // ACTUALIZAR
     // ===========================
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar usuario")
-    @ApiResponse(responseCode = "200", description = "Usuario actualizado correctamente")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> actualizarUsuario(
+            @PathVariable Long id,
+            @RequestBody Usuario usuario) {
+
         Usuario actualizado = usuarioService.actualizarPerfil(id, usuario);
         return ResponseEntity.ok(actualizado);
     }
 
     // ===========================
-    // ELIMINAR usuario
+    // ELIMINAR
     // ===========================
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar usuario")
-    @ApiResponse(responseCode = "204", description = "Usuario eliminado con éxito")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
     }
 
     // ===========================
-    // LOGIN con JWT
+    // LOGIN CORREGIDO
     // ===========================
     @PostMapping("/login")
-    @Operation(summary = "Iniciar sesión")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso"),
-        @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
-    })
-    public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
         Optional<Usuario> autenticado =
                 usuarioService.login(loginRequest.getCorreo(), loginRequest.getContrasenia());
 
@@ -107,11 +93,15 @@ public class UsuarioController {
         }
 
         Usuario usuario = autenticado.get();
+
+        // Evita NPE para el rol en el token
+        if (usuario.getRol() == null) {
+            usuario.setRol(Usuario.Rol.COMPRADOR);
+        }
+
         String token = jwtUtil.generateToken(usuario);
 
-        AuthResponse resp = new AuthResponse();
-        resp.setToken(token);
-        resp.setUsuario(usuario);
+        AuthResponse resp = new AuthResponse(token, usuario);
 
         return ResponseEntity.ok(resp);
     }

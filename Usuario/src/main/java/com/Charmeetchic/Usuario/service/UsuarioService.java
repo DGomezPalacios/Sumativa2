@@ -19,7 +19,7 @@ public class UsuarioService {
     /* Registrar un nuevo usuario */
     public Usuario registrar(Usuario usuario) {
 
-        // Asignar rol por defecto si no viene desde el front
+        // Asignar rol por defecto si no viene
         if (usuario.getRol() == null) {
             usuario.setRol(Rol.COMPRADOR);
         }
@@ -32,7 +32,10 @@ public class UsuarioService {
 
         Optional<Usuario> user = usuarioRepository.findByCorreo(correo);
 
-        if (user.isPresent() && user.get().getContrasenia().equals(contrasenia)) {
+        if (user.isPresent() &&
+            user.get().getContrasenia() != null &&
+            user.get().getContrasenia().equals(contrasenia)) {
+
             return user;
         }
 

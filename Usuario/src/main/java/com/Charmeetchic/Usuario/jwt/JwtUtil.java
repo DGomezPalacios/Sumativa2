@@ -1,44 +1,52 @@
 package com.Charmeetchic.Usuario.jwt;
 
 import java.util.Date;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import com.Charmeetchic.Usuario.model.Usuario;
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "charme-2025-key";
+    @Value("${jwt.secret}")
+    private String secret;
 
-    // 6 MESES = 180 días
-    private static final long EXPIRATION_MS = 1000L * 60 * 60 * 24 * 180;
+    private final long EXPIRATION = 1000L * 60 * 60 * 2; // 2 horas
 
     public String generateToken(Usuario usuario) {
         return Jwts.builder()
                 .setSubject(usuario.getCorreo())
-                .claim("rol", usuario.getRol().name())
-                .claim("id", usuario.getId())
+                .claim("rol", usuario.getRol())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
-                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes())
                 .compact();
     }
 
+    public boolean isTokenValid(String token) {
+        try {
+            getAllClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public String getCorreo(String token) {
-        return Jwts.parser().setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return getAllClaims(token).getSubject();
     }
 
     public String getRol(String token) {
-        return (String) Jwts.parser().setSigningKey(SECRET)
+        return (String) getAllClaims(token).get("rol");
+    }
+
+    private Claims getAllClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(secret.getBytes())
                 .parseClaimsJws(token)
-                .getBody()
-                .get("rol");
+                .getBody();
     }
 }
