@@ -1,5 +1,7 @@
 package com.Charmeetchic.Usuario.controller;
 
+import com.Charmeetchic.Usuario.jwt.JwtUtil;
+import com.Charmeetchic.Usuario.model.AuthResponse;
 import com.Charmeetchic.Usuario.model.Usuario;
 import com.Charmeetchic.Usuario.service.UsuarioService;
 
@@ -9,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +27,12 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    // ===========================
     // LISTAR todos los usuarios
+    // ===========================
     @GetMapping
     @Operation(summary = "Listar todos los usuarios")
     @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente")
@@ -33,7 +41,9 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
+    // ===========================
     // OBTENER usuario por ID
+    // ===========================
     @GetMapping("/{id}")
     @Operation(summary = "Obtener usuario por ID")
     @ApiResponses(value = {
@@ -45,7 +55,9 @@ public class UsuarioController {
         return usuario.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    // CREAR nuevo usuario (compatible con tu React)
+    // ===========================
+    // CREAR nuevo usuario
+    // ===========================
     @PostMapping
     @Operation(summary = "Registrar nuevo usuario")
     @ApiResponse(responseCode = "200", description = "Usuario registrado exitosamente")
@@ -54,7 +66,9 @@ public class UsuarioController {
         return ResponseEntity.ok(nuevo);
     }
 
-    // ACTUALIZAR usuario existente
+    // ===========================
+    // ACTUALIZAR usuario
+    // ===========================
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar usuario")
     @ApiResponse(responseCode = "200", description = "Usuario actualizado correctamente")
@@ -63,7 +77,9 @@ public class UsuarioController {
         return ResponseEntity.ok(actualizado);
     }
 
+    // ===========================
     // ELIMINAR usuario
+    // ===========================
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar usuario")
     @ApiResponse(responseCode = "204", description = "Usuario eliminado con éxito")
@@ -72,17 +88,31 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    // LOGIN 
+    // ===========================
+    // LOGIN con JWT
+    // ===========================
     @PostMapping("/login")
     @Operation(summary = "Iniciar sesión")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso"),
         @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
     })
-    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
-        Optional<Usuario> autenticado = usuarioService.login(usuario.getCorreo(), usuario.getContrasenia());
-        return autenticado.isPresent()
-                ? ResponseEntity.ok(autenticado.get())
-                : ResponseEntity.status(401).body("Credenciales incorrectas");
+    public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
+        Optional<Usuario> autenticado =
+                usuarioService.login(loginRequest.getCorreo(), loginRequest.getContrasenia());
+
+        if (autenticado.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .body("Credenciales incorrectas");
+        }
+
+        Usuario usuario = autenticado.get();
+        String token = jwtUtil.generateToken(usuario);
+
+        AuthResponse resp = new AuthResponse();
+        resp.setToken(token);
+        resp.setUsuario(usuario);
+
+        return ResponseEntity.ok(resp);
     }
 }

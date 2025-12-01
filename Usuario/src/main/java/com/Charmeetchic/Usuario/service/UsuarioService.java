@@ -16,31 +16,34 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    /* Registrar un nuevo usuario. */
+    /* Registrar un nuevo usuario */
     public Usuario registrar(Usuario usuario) {
+
+        // Asignar rol por defecto si no viene desde el front
         if (usuario.getRol() == null) {
-            usuario.setRol(Rol.COMPRADOR); // o el que quieras como default
+            usuario.setRol(Rol.COMPRADOR);
         }
+
         return usuarioRepository.save(usuario);
     }
 
-    /**
-     * Login por correo y contraseña en texto plano.
-     * Devuelve Optional<Usuario> con el usuario autenticado
-     * o Optional.empty() si las credenciales son incorrectas.
-     */
+    /* Login: correo y contraseña */
     public Optional<Usuario> login(String correo, String contrasenia) {
+
         Optional<Usuario> user = usuarioRepository.findByCorreo(correo);
+
         if (user.isPresent() && user.get().getContrasenia().equals(contrasenia)) {
-            return user; // login exitoso
+            return user;
         }
-        return Optional.empty(); // credenciales incorrectas
+
+        return Optional.empty();
     }
 
-    /* Actualizar perfil completo de un usuario existente.*/
+    /* Actualizar usuario */
     public Usuario actualizarPerfil(Long id, Usuario usuarioActualizado) {
+
         Usuario usuarioExistente = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         usuarioExistente.setNombre(usuarioActualizado.getNombre());
         usuarioExistente.setApellido(usuarioActualizado.getApellido());
@@ -51,19 +54,18 @@ public class UsuarioService {
         return usuarioRepository.save(usuarioExistente);
     }
 
-    /* Obtener todos los usuarios (para el panel de administración). */
+    /* Listar usuarios */
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
     }
 
-    /* Obtener un usuario por su ID. */
+    /* Buscar por ID */
     public Optional<Usuario> getUsuarioById(Long id) {
         return usuarioRepository.findById(id);
     }
 
-    /* Eliminar un usuario por su ID. */
+    /* Eliminar */
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }
 }
-
